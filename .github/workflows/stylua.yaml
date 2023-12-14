@@ -1,0 +1,32 @@
+name: stylua
+
+on:
+  push:
+    branches: ["master"]
+    paths:
+      - "**.lua"
+  pull_request:
+    branches: ["master"]
+    paths:
+      - "**.lua"
+
+jobs:
+  stylua:
+    name: Stylua formatting
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run stylua
+        uses: JohnnyMorganz/stylua-action@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          version: latest
+          args: . # --check
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: stylua"
